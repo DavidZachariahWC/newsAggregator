@@ -1,19 +1,24 @@
 #include "StopWords.h"
 #include <algorithm>
 
+// Constructor initializes the stopWordsSet with default stop words
 StopWords::StopWords() {
     loadDefaultStopWords();
 }
 
+// Checks if a given word is a stop word
 bool StopWords::isStopWord(const std::string& word) const {
-    // Convert word to lowercase for comparison
+    // Convert the word to lowercase for case-insensitive comparison
     std::string lowerWord = word;
     std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(), ::tolower);
+    
+    // Check if the word exists in the stopWordsSet
     return stopWordsSet.find(lowerWord) != stopWordsSet.end();
 }
 
+// Loads a default list of common English stop words into the set
 void StopWords::loadDefaultStopWords() {
-    // Common English stop words
+    // Common English stop words used for filtering uninformative words
     const char* defaultStopWords[] = {
         "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
         "has", "he", "in", "is", "it", "its", "of", "on", "that", "the",
@@ -27,7 +32,8 @@ void StopWords::loadDefaultStopWords() {
         "might", "must", "shall", "into", "if", "then", "else", "about"
     };
 
+    // Add each stop word to the set for efficient lookup
     for (const auto& word : defaultStopWords) {
         stopWordsSet.insert(word);
     }
-} 
+}
