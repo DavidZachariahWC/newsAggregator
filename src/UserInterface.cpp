@@ -2,19 +2,22 @@
 #include <iostream>
 #include <limits>
 
+// Constructor initializes components: IndexHandler, DocumentParser, and QueryProcessor
 UserInterface::UserInterface() {
     indexHandler = std::make_unique<IndexHandler>();
     docParser = std::make_unique<DocumentParser>();
     queryProcessor = std::make_unique<QueryProcessor>(indexHandler.get());
 }
 
+// Starts the main user interface loop
 void UserInterface::start() {
     while (true) {
-        displayMenu();
-        handleUserInput();
+        displayMenu();  // Show the main menu
+        handleUserInput();  // Handle user input and execute commands
     }
 }
 
+// Displays the main menu with available options
 void UserInterface::displayMenu() {
     std::cout << "\n======================\n";
     std::cout << "SuperSearch Menu\n";
@@ -28,10 +31,11 @@ void UserInterface::displayMenu() {
     std::cout << "Enter choice: ";
 }
 
+// Processes user input and executes the corresponding action
 void UserInterface::handleUserInput() {
     char choice;
     std::cin >> choice;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
 
     switch (choice) {
         case 'i':
@@ -53,76 +57,76 @@ void UserInterface::handleUserInput() {
         case 'e':
         case 'E':
             std::cout << "Exiting program\n";
-            exit(0);
+            exit(0);  // Exit the program
         default:
             std::cout << "Invalid choice. Please try again.\n";
     }
 }
 
+// Creates a new index from documents in the specified directory
 void UserInterface::createIndex() {
     std::cout << "Enter directory path to index: ";
     std::string directoryPath;
     std::getline(std::cin, directoryPath);
 
     std::cout << "Indexing documents from " << directoryPath << "...\n";
-    
+
     try {
-        auto documents = docParser->parseDirectory(directoryPath);
+        auto documents = docParser->parseDirectory(directoryPath);  // Parse documents from directory
         
         std::cout << "Found " << documents.size() << " documents.\n";
         std::cout << "Adding documents to index...\n";
-        
+
         for (const auto& doc : documents) {
-            indexHandler->addDocument(doc);
+            indexHandler->addDocument(doc);  // Add each document to the index
         }
-        
+
         std::cout << "Indexing complete.\n";
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         std::cerr << "Error during indexing: " << e.what() << std::endl;
     }
 }
 
+// Saves the current index to a specified file
 void UserInterface::saveIndex() {
     std::cout << "Enter file path to save index: ";
     std::string filePath;
     std::getline(std::cin, filePath);
 
     try {
-        indexHandler->saveIndices(filePath);
+        indexHandler->saveIndices(filePath);  // Save indices to the specified file
         std::cout << "Index saved successfully.\n";
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         std::cerr << "Error saving index: " << e.what() << std::endl;
     }
 }
 
+// Loads an index from a specified file
 void UserInterface::loadIndex() {
     std::cout << "Enter file path to load index: ";
     std::string filePath;
     std::getline(std::cin, filePath);
 
     try {
-        indexHandler->loadIndices(filePath);
+        indexHandler->loadIndices(filePath);  // Load indices from the specified file
         std::cout << "Index loaded successfully.\n";
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         std::cerr << "Error loading index: " << e.what() << std::endl;
     }
 }
 
+// Processes a user query and displays the results
 void UserInterface::enterQuery() {
     std::cout << "\nEnter your search query:\n";
     std::cout << "  - Use -term to exclude terms\n";
     std::cout << "Query: ";
-    
+
     std::string queryString;
     std::getline(std::cin, queryString);
 
     try {
-        queryProcessor->processQuery(queryString);
-    }
-    catch (const std::exception& e) {
+        queryProcessor->processQuery(queryString);  // Process the query using QueryProcessor
+    } catch (const std::exception& e) {
         std::cerr << "Error processing query: " << e.what() << std::endl;
     }
-} 
+}
