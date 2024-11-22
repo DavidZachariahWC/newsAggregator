@@ -9,28 +9,29 @@
 #include "StopWords.h"
 #include "Stemmer.h"
 
+// DocumentParser class for parsing, processing, and cleaning documents in the search engine
 class DocumentParser {
 public:
-    DocumentParser();
+    DocumentParser(); // Default constructor
 
-    // Parse a single document
+    // Parses a single document from a file and returns a Document object
     std::unique_ptr<Document> parseDocument(const std::string& filePath);
-    
-    // Parse all documents in a directory
+
+    // Parses all documents in a directory and returns a list of Document objects
     std::vector<std::unique_ptr<Document>> parseDirectory(const std::string& directoryPath);
 
-    // Process text: remove stopwords and apply stemming
+    // Processes text by removing stopwords and applying stemming
     std::string processText(const std::string& text);
 
 private:
-    StopWords stopWords;
-    Stemmer stemmer;
+    StopWords stopWords; // StopWords instance to manage and remove common words
+    Stemmer stemmer;     // Stemmer instance to reduce words to their base forms
 
-    // Helper function to extract array from JSON
+    // Extracts an array of strings from a JSON value
     std::vector<std::string> extractJsonArray(const rapidjson::Value& array);
-    
-    // Helper function to clean and normalize text
+
+    // Cleans and normalizes raw text, removing unwanted characters or formatting
     std::string cleanText(const std::string& text);
 };
 
-#endif 
+#endif
